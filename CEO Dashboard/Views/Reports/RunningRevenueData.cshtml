@@ -1,0 +1,238 @@
+﻿@model CEO_Dashboard.Models.PayorMixTablesModels.MasterDetails
+@{
+    ViewBag.Title = "RunningRevenueData";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+
+    DateTime date = DateTime.Now;
+    var datestart = DateTime.Parse(Model.StartTime);
+    var datelabel = DateTime.Parse(Model.EndTime);
+    var firstDayOfMonth = new DateTime(datelabel.Year, datelabel.Month, 1);
+    var firstDateOfLastMonth = new DateTime(datelabel.Year, datelabel.AddMonths(-1).Month, 1);
+}
+
+
+<div class="col-sm-12">
+
+
+    @using (Html.BeginForm("RunningRevenueData", "Reports", FormMethod.Post, new { @class = "card-box", autocomplete = "off" }))
+    {
+
+        <div class="form-group">
+
+            <div class="col-sm-4">
+                @Html.LabelFor(m => m.FacilityIds, new { @class = "col-sm-12" })
+                @Html.ListBoxFor(m => m.FacilityIds, Model.Facility, new { @class = "listbox form-control input-sm col-sm-3" })
+            </div>
+            <div class="col-sm-3">
+                    @Html.LabelFor(m => m.StartTime, new { @class = "col-sm-3" })
+                    @Html.TextBoxFor(m => m.StartTime, new { @class = "datepicker-autoclose form-control input-sm col-sm-3", @id = "start" })
+
+                </div>
+            <div class="col-sm-3">
+                @Html.LabelFor(m => m.EndTime, new { @class = "col-sm-3" })
+                @Html.TextBoxFor(m => m.EndTime, new { @class = "datepicker-autoclose form-control input-sm col-sm-3", @id = "end" })
+                @*<span class="input-group-addon bg-custom b-0 text-white"><i class="icon-calender"></i></span>*@
+            </div>
+
+            <br />
+
+            <button type="submit" class="btn btn-default waves-effect waves-light btn-sm">
+                Filter
+            </button>
+
+        </div>
+    }
+</div>
+<div class="col-sm-12">
+
+    <div class="card-box">
+
+        <fieldset>
+            @*<legend>Day Wise Revenue and Volume (Invoice Base)</legend>*@
+            <legend>Day Wise Revenue And Volume (Running Income)</legend>
+            <div class="row">
+                <fieldset>
+                    @if (DateTime.Parse(Model.StartTime).Day == DateTime.Parse(Model.EndTime).Day)
+                    {
+                        <legend style="font-size:medium;text-align:center">@String.Format("{0:D}", datestart.AddDays(0))</legend>
+                    }
+                    else
+                    {
+                    <legend style="font-size:medium;text-align:center">@String.Format("{0:D}", datestart.AddDays(0)) To @String.Format("{0:D}", datelabel.AddDays(0))</legend>
+                    }
+                    @*@Html.ActionLink("Download Report", "PayorMixReportExcel", "Reports")*@
+                    <div class="col-lg-4">
+                        <h4 class="m-t-0 header-title" style="text-align:center"><b>IPD</b></h4>
+                        <div class="p-20">
+                            <table class="table table-striped m-0">
+                                <thead>
+                                    <tr>
+                                        <th>Channel</th>
+                                        <th>IPD Count</th>
+                                        <th>IPD Rev. </th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>Total</th>
+                                        <th>@string.Format("{0:n0}", ViewBag.revCountIPD) </th>
+                                        <th> @string.Format("{0:n0}", ViewBag.revSumIPD) </th>
+
+                                    </tr>
+                                </tfoot>
+
+                                <tbody>
+                                    @{
+                                                //To make unique Id
+                                                int i = 0;
+                                                foreach (var item in Model.ResultIP)
+                                                {
+
+                                            <tr>
+                                                @if(item.CompanyTypeName == "Managed Care(Private)")
+                                                                                {
+                                                <td scope = "row" > HMO </td>
+                                                }
+                                                else if (item.CompanyTypeName == "Managed Care(Public)")
+                                                    {
+                                                    <td scope = "row" > NHIS </td >
+                                                }
+                                                    else
+                                                    {
+                                                    <td scope = "row" > @item.CompanyTypeName </td >
+                                                                                }
+                                                <td > @string.Format("{0:n0}", item.Counting) </td >
+                                                <td > @string.Format("{0:n0}", item.IPNetAmt) </td >
+
+                                            </tr >
+                                            i++;
+                                                }
+                                            }
+                                </tbody >
+
+                            </table >
+                        </div >
+
+                    </div>
+                    <div class="col-lg-4">
+                        <h4 class="m-t-0 header-title" style="text-align:center"><b>OPD</b></h4>
+                        <div class="p-20">
+                            <table class="table table-striped m-0">
+
+                                <thead>
+                                    <tr>
+                                        <th>Channel</th>
+                                        <th>OPD Count</th>
+                                        <th>OPD Rev.</th>
+
+
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>Total</th>
+                                        <th>@string.Format("{0:n0}", ViewBag.revCountOPD) </th>
+                                        <th>@string.Format("{0:n0}", ViewBag.revSumOPD)</th>
+
+                                        @*<th>@string.Format("{0:n0}", ViewBag.revTotalAmt)</th>*@
+                                    </tr>
+                                </tfoot>
+
+                                <tbody>
+                                    @{
+                                        //To make unique Id
+                                       
+                                        foreach (var item in Model.ResultOP)
+                                        {
+
+                                            <tr>
+                                               @if (item.CompanyTypeName == "Managed Care(Private)")
+                                               {
+                                                <td scope="row">HMO</td>
+                                               }
+                                               else if (item.CompanyTypeName == "Managed Care(Public)")
+                                               {
+                                                <td scope="row">NHIS</td>
+                                               }
+                                               else
+                                               {
+                                                <td scope="row">@item.CompanyTypeName</td>
+                                               }
+                                                <td>@string.Format("{0:n0}", item.Counting)</td>
+                                                <td>@string.Format("{0:n0}",item.OPNetAmt)</td>
+                                                @*<td>@string.Format("{0:n0}", item.TotalNetAmt)</td>*@
+                                            </tr>
+                                           
+                                        }
+                                    }
+                                </tbody>
+                                
+
+                            </table>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-4">
+                        <h4 class="m-t-0 header-title" style="text-align:center"><b>Total</b></h4>
+                        <div class="p-20">
+                            <table class="table table-striped m-0">
+
+                                <thead>
+                                    <tr>
+                                        <th>Channel</th>
+                                        <th>Tot Count</th>
+                                        <th>Tot Rev. </th>
+                                      
+
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>Total</th>
+                                        <th>@string.Format("{0:n0}", ViewBag.revTotalCount) </th>
+                                        <th> @string.Format("{0:n0}", ViewBag.revTotalAmt) </th>
+
+                                        @*<th>@string.Format("{0:n0}", ViewBag.revTotalAmt)</th>*@
+                                    </tr>
+                                </tfoot>
+
+                                <tbody>
+                                    @{
+                                        //To make unique Id
+
+                                        foreach (var item in Model.TotalOPIP)
+                                        {
+
+                                            <tr>
+                                                @if (item.CompanyTypeName == "Managed Care(Private)")
+                                                {
+                                                    <td scope="row">HMO</td>
+                                                }
+                                                else if (item.CompanyTypeName == "Managed Care(Public)")
+                                                {
+                                                    <td scope="row">NHIS</td>
+                                                }
+                                                else
+                                                {
+                                                    <td scope="row">@item.CompanyTypeName</td>
+                                                }
+                                                @*<td scope="row">@item.CompanyTypeName</td>*@
+                                                <td>@string.Format("{0:n0}", item.Counting)</td>
+
+                                                <td>@string.Format("{0:n0}", item.TotalNetAmt)</td>
+                                            </tr>
+
+                                        }
+                                    }
+                                </tbody>
+
+                            </table>
+                        </div>
+
+                    </div>
+
+                    </fieldset>
+                </div>
+            </fieldset>
+            </div>
+    </div>

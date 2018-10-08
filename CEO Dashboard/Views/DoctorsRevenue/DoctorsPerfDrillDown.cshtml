@@ -1,0 +1,70 @@
+﻿@model CEO_Dashboard.Models.PayorMixTablesModels.MasterDetails
+@{
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+
+    ViewBag.Title = "DoctorsPerfDrillDown";
+    DateTime date = DateTime.Now;
+    var datestart = DateTime.Parse(Model.StartTime);
+    var datelabel = DateTime.Parse(Model.EndTime);
+    var firstDayOfMonth = new DateTime(datelabel.Year, datelabel.Month, 1);
+    var firstDateOfLastMonth = new DateTime(datelabel.Year, datelabel.AddMonths(-1).Month, 1);
+}
+
+<div class="col-sm-12">
+
+    <div class="card-box">
+            <div class="row">
+                <fieldset>
+                    <legend style="font-size:medium;text-align:center">@String.Format("{0:D}", datestart.AddDays(0)) To @String.Format("{0:D}", datelabel.AddDays(0))</legend>
+                    @*@Html.ActionLink("Download Report", "PayorMixReportExcel", "Reports")*@
+                    <div class="col-lg-12">
+                       
+                        <div class="p-20">
+                            <table class="table table-striped m-0">
+
+                                <thead>
+                                    <tr>
+                                        <th>Doctors</th>
+                                        <th>OP Net Amount</th>
+                                        <th>IP Net Amt </th>
+                                        <th>Total Net Amount </th>
+
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>Total</th>
+                                        @*<th>@ViewBag.revCountIPD </th>
+                                        <th>@string.Format("{0:n0}", ViewBag.revSumIPD)</th>*@
+
+                                    </tr>
+                                </tfoot>
+
+                                <tbody>
+                                    @{
+                                        //To make unique Id
+                                        int i = 0;
+                                        foreach (var item in Model.ResultIP)
+                                        {
+
+                                            <tr>
+                                                <td scope="row" style="font-size:13px">@item.ProvidingDoctor.ToUpper()</td>
+                                                <td>@string.Format("{0:n0}", item.OPNetAmt)</td>
+                                                <td>@string.Format("{0:n0}", item.IPNetAmt)</td>
+                                                <td>@string.Format("{0:n0}", item.TotalNetAmt)</td>
+                                            </tr>
+                                            i++;
+                                        }
+                                    }
+                                </tbody>
+                               
+                            </table>
+                        </div>
+                        
+                    </div>
+                    </div>
+        
+            </div>
+    
+    </div>
+

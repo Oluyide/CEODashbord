@@ -1,0 +1,249 @@
+﻿
+@model CEO_Dashboard.Models.PayorMixMTDModel.MasterMTDDetails
+@{
+    ViewBag.Title = "PayorMixMTDReport";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+    DateTime date = DateTime.Now;
+    var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
+    var firstDateOfLastMonth = new DateTime(date.Year, date.AddMonths(-1).Month, 1);
+    var datelabel = DateTime.Parse(Model.EndTime);
+
+}
+
+@if (ViewBag.Error != null)
+{
+    <h6><label style="color:red">@ViewBag.Error</label></h6>
+}
+
+
+<div class="col-sm-12">
+    
+
+
+    @using (Html.BeginForm("PayorMixMTDReport", "Reports", FormMethod.Post, new { @class = "card-box" }))
+    {
+
+        <div class="form-group">
+
+            <div class="col-sm-4">
+                @Html.LabelFor(m => m.FacilityIds, new { @class = "col-sm-12" })
+                @Html.ListBoxFor(m => m.FacilityIds, Model.Facility, new { @class = "listbox form-control input-sm col-sm-3" })
+            </div>
+            @*<div class="col-sm-3">
+                @Html.LabelFor(m => m.StartTime, new { @class = "col-sm-3" })
+                @Html.TextBoxFor(m => m.StartTime, new { @class = "datepicker form-control input-sm col-sm-3", @id = "start" })
+              
+            </div>*@
+            <div class="col-sm-3">
+                @Html.LabelFor(m => m.EndTime, new { @class = "col-sm-3" })
+                @Html.TextBoxFor(m => m.EndTime, new { @class = "datepicker-autoclose form-control input-sm col-sm-3", @id = "end" })
+                @*<span class="input-group-addon bg-custom b-0 text-white"><i class="icon-calender"></i></span>*@
+            </div>
+
+            <br />
+
+            <button type="submit" class="btn btn-default waves-effect waves-light btn-sm">
+                Filter
+            </button>
+
+        </div>
+    }
+    </div>
+    <div class="col-sm-12">
+        <div class="card-box">
+            <fieldset>
+
+                <legend>Revenue and Volume MTD (Running Income)</legend>
+                <div class="row">
+
+                    <fieldset>
+
+                        <legend style="font-size:medium;text-align:center"> Month To Date  (@String.Format("{0:D}", @firstDayOfMonth) - @String.Format("{0:D}", @datelabel)) </legend>
+                        <div class="col-lg-6">
+                            <h4 class="m-t-0 header-title" style="text-align:center"><b>IPD</b></h4>
+
+
+                            <div class="p-20">
+                                <table class="table table-striped m-0">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Channel</th>
+                                            <th>Pt. Count</th>
+                                            <th>Revenue(M) </th>
+
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Total</th>
+                                            <th>@ViewBag.payorMTDCountIPD </th>
+                                            <th>@ViewBag.revMTDSumIPD </th>
+
+                                        </tr>
+                                    </tfoot>
+
+                                    <tbody>
+                                        @{
+                                        //To make unique Id
+                                        int i = 0;
+                                        foreach (var item in Model.PayorMTDReportIPD)
+                                        {
+
+                                    <tr>
+                                        <td scope="row">@item.PayorMTDNameIPD</td>
+                                        <td>@item.PayorMTDCountIPD</td>
+                                        <td>@item.RevenueMTDIPD</td>
+                                        @*<td>@item.Revenue</td>*@
+                                    </tr>
+                                            i++;
+                                        }
+                                        }
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-6">
+                            <h4 class="m-t-0 header-title" style="text-align:center"><b>OPD</b></h4>
+                            <div class="p-20">
+                                <table class="table table-striped m-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Channel</th>
+                                            <th>Pt. Count</th>
+                                            <th>Revenue(M) </th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Total</th>
+                                            <th>@ViewBag.payorMTDCountOPD </th>
+                                            <th>@ViewBag.revMTDSumOPD </th>
+
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        @{
+                                        //To make unique Id
+                                        int j = 0;
+                                        foreach (var item in Model.PayorMTDReportOPD)
+                                        {
+
+                                    <tr>
+                                        <td scope="row">@item.PayorMTDNameOPD</td>
+                                        <td>@item.PayorMTDCountOPD</td>
+                                        <td>@item.RevenueMTDOPD</td>
+                                        @*<td>@item.Revenue</td>*@
+                                    </tr>
+                                            j++;
+                                        }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="row">
+
+                    <fieldset>
+                        <legend style="font-size:medium;text-align:center">MTD Previous Month (@String.Format("{0:D}", @firstDateOfLastMonth) - @String.Format("{0:D}", datelabel))</legend>
+                        <div class="col-lg-6">
+                            <h4 class="m-t-0 header-title" style="text-align:center"><b>IPD</b></h4>
+
+
+                            <div class="p-20">
+                                <table class="table table-striped m-0">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Channel</th>
+                                            <th>Pt. Count</th>
+                                            <th>Revenue(M) </th>
+
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Total</th>
+                                            <th>@ViewBag.payorLMCountIPD </th>
+                                            <th>@ViewBag.revLMSumIPD </th>
+
+                                        </tr>
+                                    </tfoot>
+
+                                    <tbody>
+                                        @{
+                                        //To make unique Id
+                                        int k = 0;
+                                        foreach (var item in Model.PayorLMReportIPD)
+                                        {
+
+                                    <tr>
+                                        <td scope="row">@item.PayorLMNameIPD</td>
+                                        <td>@item.PayorLMCountIPD</td>
+                                        <td>@item.RevenueLMIPD</td>
+                                        @*<td>@item.Revenue</td>*@
+                                    </tr>
+                                            k++;
+                                        }
+                                        }
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-6">
+                            <h4 class="m-t-0 header-title" style="text-align:center"><b>OPD</b></h4>
+                            <div class="p-20">
+                                <table class="table table-striped m-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Channel</th>
+                                            <th>Pt. Count</th>
+                                            <th>Revenue(M) </th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Total</th>
+                                            <th>@ViewBag.payorLMCountOPD </th>
+                                            <th>@ViewBag.revLMSumOPD </th>
+
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        @{
+                                        //To make unique Id
+                                        int l = 0;
+                                        foreach (var item in Model.PayorLMReportOPD)
+                                        {
+
+                                    <tr>
+                                        <td scope="row">@item.PayorLMNameOPD</td>
+                                        <td>@item.PayorLMCountOPD</td>
+                                        <td>@item.RevenueLMOPD</td>
+                                        @*<td>@item.Revenue</td>*@
+                                    </tr>
+                                            l++;
+                                        }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </fieldset>
+                </div>
+
+            </fieldset>
+        </div>
+    </div>
+    </div>

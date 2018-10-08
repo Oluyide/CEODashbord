@@ -1,0 +1,194 @@
+﻿
+@model CEO_Dashboard.Models.BudgetModels.MasterMTDDetails
+@{
+    ViewBag.Title = "SpecialtyMixReport";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+
+    DateTime date = DateTime.Now;
+    var datelabel = DateTime.Parse(Model.EndTime);
+    var firstDayOfMonth = new DateTime(datelabel.Year, datelabel.Month, 1);
+    var firstDateOfLastMonth = new DateTime(datelabel.Year, datelabel.AddMonths(-1).Month, 1);
+}
+@if (ViewBag.Error != null)
+{
+    <h6><label style="color:red">@ViewBag.Error</label></h6>
+}
+<div class="col-sm-12">
+     
+
+    @using (Html.BeginForm("SpecialtyMixReport", "BudgetVsRevenue", FormMethod.Post, new { @class = "card-box", autocomplete = "off" }))
+    {
+
+        <div class="form-group">
+           
+                <div class="col-sm-3">
+                    @Html.LabelFor(m => m.FacilityIds, new { @class = "col-sm-12" })
+                    @Html.ListBoxFor(m => m.FacilityIds, Model.Facility, new { @class = "listbox form-control input-sm col-sm-3" })
+                </div>
+                @*<div class="col-sm-3">
+                @Html.LabelFor(m => m.StartTime, new { @class = "col-sm-3" })
+                @Html.TextBoxFor(m => m.StartTime, new { @class = "datepicker form-control input-sm col-sm-3", @id = "start" })
+
+            </div>*@
+                <div class="col-sm-3">
+                    @Html.LabelFor(m => m.EndTime, new { @class = "col-sm-3" })
+                    @Html.TextBoxFor(m => m.EndTime, new { @class = "datepicker-autoclose form-control input-sm col-sm-3", @id = "end" })
+                    @*<span class="input-group-addon bg-custom b-0 text-white"><i class="icon-calender"></i></span>*@
+                </div>
+
+                <br />
+
+                <button type="submit" class="btn btn-default waves-effect waves-light btn-sm">
+                    Filter
+                </button>
+
+            </div>
+    }
+
+</div>
+
+<div class="col-sm-12">
+   <h4 class="m-t-0 header-title" style="text-align:center"><b><legend style="font-size:medium;text-align:center">Report as At (@String.Format("{0:D}", datelabel.AddDays(0)))</legend></b></h4>
+    <div class="card-box">
+        <div class="col-lg-12">
+            <div class="p-20">
+                <table class="table table-bordered m-0">
+                    <thead>
+                        <tr>
+                            <th style="font-size:12px">Specialty</th>
+                            <th style="font-size:12px">Budget FTD</th>
+                            <th style="font-size:12px">Pro. Budget</th>
+                            <th style="font-size:12px"> Actual </th>
+                            <th style="font-size:12px">Variance</th>
+                            <th style="font-size:12px"> Required RAB</th>
+                        </tr>
+                    </thead>
+
+
+                    <tfoot>
+                        <tr>
+                            <th>Total</th>
+
+
+                            @*<th>@string.Format("{0:n0}", @ViewBag.BudgetSum)</th>
+                            <th>@string.Format("{0:n0}", @ViewBag.Prorata) </th>*@
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        @{
+                            foreach (var item in Model.SpecialtyAnalysis)
+                            {
+                                <tr>
+
+                                    <td scope="row" style="font-size:12px"> @string.Format("{0:n0}", @item.Specialization.ToUpper()) </td>
+
+
+                                    <td> @string.Format("{0:n0}", @item.Budget) </td>
+
+
+                                    <td> @string.Format("{0:n0}", @item.Proratedbudget) </td>
+
+                                    <td> @string.Format("{0:n0}", @item.Revenue) </td>
+
+
+                                    <td> @string.Format("{0:n0}", @item.Variance) </td>
+
+                                    <td> @string.Format("{0:n0}", @item.MeetBudget) </td>
+                                </tr>
+                            }
+
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+
+
+
+
+
+        @*<div class="col-lg-6">
+            <div class="p-20">
+                <table class="table table-bordered m-0">
+
+                    <thead>
+                        <tr>
+                            <th style="font-size:12px"> Actual </th>
+                            <th style="font-size:12px">Variance</th>
+                            <th style="font-size:12px"> Required RAB</th>
+
+
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>@string.Format("{0:n0}", @ViewBag.Actual)</th>
+                            <th> @string.Format("{0:n0}", ViewBag.SumVariance) </th>
+                            <th> @string.Format("{0:n0}", ViewBag.SumMeet) </th>
+                            @*<th>@ViewBag.IPOPRunrateBasis </th>
+                                <th>@ViewBag.IPOPtoAcheiveRunRate </th>*@
+                        @*@*</tr>
+                    </tfoot>
+                    <tbody>
+                        @{
+                            foreach (var r in Model.SpecialtyRev)
+                            {
+                                <tr>
+                                    @*<tr>@r.DoctorDepartment</tr>*@
+                                    @*<td>@string.Format("{0:n0}", @r.TotalNetAmt) </td>
+                                    <td> @string.Format("{0:n0}", @r.Variance)</td>
+                                    <td> @string.Format("{0:n0}", @r.MeetBudget)</td>*@
+
+
+                                @*</tr>
+
+                            }
+                        }
+
+                    </tbody>
+
+                </table>
+            </div>*@
+            @*foreach (var item in Model.SumAnalysis)
+                {
+
+                    <tr>
+
+                        <th scope="row">Total</th>
+                        <th>@item.SumBudget</th>
+                        <th>@item.SumProratedBudget</th>
+                        <th>@item.SumRevenue</th>
+                        <th>@item.SumVariance</th>
+                        <th>@item.SumMeetBudget</th>
+
+
+                    </tr>
+
+                }*@
+
+
+        @*</div>*@
+    </div>
+
+
+
+    </div>
+    
+
+
+
+            
+
+
+
+
+
+
+
+            
+
+
+
+        
+

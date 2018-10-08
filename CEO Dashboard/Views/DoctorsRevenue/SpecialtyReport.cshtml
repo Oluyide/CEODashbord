@@ -1,0 +1,32 @@
+﻿@model CEO_Dashboard.Models.PayorMixTablesModels.MasterDetails
+@using Kendo.Mvc.Extensions
+@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = "SpecialtyReport";
+}
+
+
+
+@(Html.Kendo().Grid<CEO_Dashboard.Models.PayorMixTablesModels.ResultIP>
+    ()
+    .Name("grid")
+    .Columns(columns =>
+    {
+    columns.Bound(e => e.DoctorDepartment).Width(130);
+    columns.Bound(e => e.OPNetAmt).Width(130);
+    columns.Bound(e => e.IPNetAmt).Width(130);
+    columns.Bound(e => e.TotalNetAmt).Width(110);
+    })
+    .Sortable()
+    .Pageable()
+    .Scrollable()
+    .ClientDetailTemplateId("template")
+    .HtmlAttributes(new { style = "height:600px;" })
+    .DataSource(dataSource => dataSource
+    .Ajax()
+    .PageSize(6)
+    .Read(read => read.Action("HierarchyBinding_Employees", "Grid"))
+    )
+    .Events(events => events.DataBound("dataBound"))
+)

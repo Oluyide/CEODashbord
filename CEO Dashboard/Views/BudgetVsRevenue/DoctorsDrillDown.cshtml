@@ -1,0 +1,90 @@
+﻿
+@model CEO_Dashboard.Models.BudgetModels.ListofDoc
+@{
+    ViewBag.Title = "DoctorsDrillDown";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+    DateTime date = DateTime.Now;
+    var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
+    var firstDateOfLastMonth = new DateTime(date.Year, date.AddMonths(-1).Month, 1);
+
+
+}
+
+@if (ViewBag.Error != null)
+{
+    <h6><label style="color:red">@ViewBag.Error</label></h6>
+}
+
+
+    @*<div class="col-sm-12">
+
+
+
+        @using (Html.BeginForm("AdmissionReports", "BudgetVsRevenue", FormMethod.Post, new { @class = "card-box" }))
+        {
+
+            <div class="form-group">
+
+                <div class="col-sm-4">
+                    @Html.LabelFor(m => m.FacilityIds, new { @class = "col-sm-12" })
+                    @Html.ListBoxFor(m => m.FacilityIds, Model.Facility, new { @class = "listbox form-control input-sm col-sm-3" })
+                </div>
+                @*<div class="col-sm-3">
+                        @Html.LabelFor(m => m.StartTime, new { @class = "col-sm-3" })
+                        @Html.TextBoxFor(m => m.StartTime, new { @class = "datepicker form-control input-sm col-sm-3", @id = "start" })
+
+                    </div>*@
+    @*<div class="col-sm-3">
+        @Html.LabelFor(m => m.EndTime, new { @class = "col-sm-3" })
+        @Html.TextBoxFor(m => m.EndTime, new { @class = "datepicker form-control input-sm col-sm-3", @id = "end" })
+        @*<span class="input-group-addon bg-custom b-0 text-white"><i class="icon-calender"></i></span>*@
+    @*</div>*@
+
+    @*<br />
+
+                    <button type="submit" class="btn btn-default waves-effect waves-light btn-sm">
+                        Filter
+                    </button>
+
+                </div>
+            }
+        </div>*@
+
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card-box">
+                <h4 class="m-t-0 header-title"><b>Dr. @ViewBag.DoctorsName</b></h4>
+                <p class="text-muted font-13">
+
+                </p>
+
+                <table  class="table-bordered ">
+                    <thead>
+                        <tr>
+                            <th data-field="id" data-sortable="true" data-formatter="nameFormatter">Patient Regno</th>
+                            <th data-field="amount" data-align="center" data-sortable="true" data-sorter="priceSorter">Diagnosis</th>
+                            <th data-field="status" data-align="center" data-sortable="true" data-formatter="priceSorter">Investigations</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @{
+                            int i = 0;
+                            foreach (var item in Model.DoctorDiagItemAnalysis)
+                            {
+
+                                <tr>
+                                    @*<td scope="row">@item.doctorId</td>*@
+                                    <td>@item.PatientId</td>
+                                    <td>@item.Diagnosis</td>
+                                    <td>@item.ServiceName</td>
+                                </tr>
+                                i++;
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,210 @@
+﻿@model CEO_Dashboard.Models.BudgetModels.MasterMTDDetails
+@{
+    ViewBag.Title = "PayorMixMTDReport";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+
+    DateTime date = DateTime.Now;
+    var datelabel = DateTime.Parse(Model.EndTime);
+    var firstDayOfMonth = new DateTime(datelabel.Year, datelabel.Month, 1);
+    var firstDateOfLastMonth = new DateTime(datelabel.Year, datelabel.AddMonths(-1).Month, 1);
+}
+  @if (ViewBag.Error != null)
+    {
+<h6><label style="color:red">@ViewBag.Error</label></h6>
+    } 
+<div class="col-sm-12">
+    @using (Html.BeginForm("RevenueSummary", "BudgetVsRevenue", FormMethod.Post, new { @class = "card-box", autocomplete = "off" }))
+    {
+
+        <div class="form-group">
+            <div class="col-sm-4">
+                @Html.LabelFor(m => m.FacilityIds, new { @class = "col-sm-12" })
+                @Html.ListBoxFor(m => m.FacilityIds, Model.Facility, new { @class = "listbox form-control input-sm col-sm-3" })
+            </div>
+            @*<div class="col-sm-3">
+                    @Html.LabelFor(m => m.StartTime, new { @class = "col-sm-3" })
+                    @Html.TextBoxFor(m => m.StartTime, new { @class = "datepicker form-control input-sm col-sm-3", @id = "start" })
+                </div>*@
+            <div class="col-sm-3">
+                @Html.LabelFor(m => m.EndTime, new { @class = "col-sm-3" })
+                @Html.TextBoxFor(m => m.EndTime, new { @class = "datepicker-autoclose form-control input-sm col-sm-3", @id = "end" })
+                @*<span class="input-group-addon bg-custom b-0 text-white"><i class="icon-calender"></i></span>*@
+            </div>
+
+            <br />
+
+            <button type="submit" class="btn btn-default waves-effect waves-light btn-sm">
+                Filter
+            </button>
+
+        </div>
+    }
+
+</div>
+
+
+
+<div class="col-sm-12">
+    <div class="card-box">
+        
+            <div class="row">
+
+                
+                    <div class="col-lg-12">
+                        <h4 class="m-t-0 header-title" style="text-align:center"><b><legend style="font-size:medium;text-align:center">Revenue Report (@String.Format("{0:D}", datelabel))</legend></b></h4>
+
+                        @*@Html.ActionLink("Download Report", "RevenueSummaryExcel", "Reports")*@
+                        <div class="p-20">
+                            <table class="table table-bordered m-0">
+
+                                <thead>
+                                    <tr>
+                                        <th>Particulars</th>
+                                        <th>Budget</th>
+                                        <th>Pro-Rata Basis budget till date </th>
+                                        <th>Actual FTD</th>
+                                        <th>Actual MTD</th>
+                                        <th>Current RunRate</th>
+                                        <th>Run Rate Basis Projection</th>
+                                        <th>Required Run Rate to achieve budget</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+
+                                       
+
+                                        <th>Total</th>
+                                        <th>@string.Format("{0:n0}", ViewBag.IPOPbudget) </th>
+                                        <th>@string.Format("{0:n0}", ViewBag.IPOPProRata) </th>
+                                        <th> @string.Format("{0:n0}", ViewBag.IPOPActualDay) </th>
+                                        <th> @string.Format("{0:n0}", ViewBag.IPOPActualMTD )</th>
+                                        <th> @string.Format("{0:n0}", ViewBag.IPOPCurrentRunRateMTD) </th>
+                                        <th> @string.Format("{0:n0}", ViewBag.IPOPRunrateBasis) </th>
+                                        <th> @string.Format("{0:n0}", ViewBag.IPOPtoAcheiveRunRate) </th>
+                                    </tr >
+                                </tfoot >
+
+                                <tbody >
+                                    @{
+                                            //To make unique Id
+
+                                            foreach (var item in Model.BudgetAnalysis)
+                                            {
+
+                                            <tr>
+                                                <td scope = "row" > IPD Income Revenue</td >
+
+
+                                                     <td scope = "row" > @string.Format("{0:n0}", item.IPDbudget) </td>
+
+
+                                                      <td> @string.Format("{0:n0}", @item.IPDProrata) </td>
+
+
+                                                      <td> @string.Format("{0:n0}", @ViewBag.revSumIPD) </td>
+
+
+                                                      <td> @string.Format("{0:n0}", @ViewBag.revSumIPDMTD) </td>
+
+
+                                                      <td> @string.Format("{0:n0}", @ViewBag.IPDRunRate) </td>
+
+
+                                                      <td> @string.Format("{0:n0}", @ViewBag.IPDRunrateBasis) </td>
+
+
+                                                      <td> @string.Format("{0:n0}", @ViewBag.IPDToAchievebufdgetRunRate) </td >
+
+                                                @*ViewBag.revSumIPDMTD = IPOPValuesMTD.Select(x => x.IPNetAmt).Sum();
+                                                ViewBag.revSumOPDMTD = IPOPValuesMTD.Select(x => x.OPNetAmt).Sum();*@
+                                               
+
+                                            </tr>
+                                            <tr>
+                                                <td scope="row">OPD Income Revenue</td>
+                                                <td scope="row">@string.Format("{0:n0}",item.OPDBudget)</td >
+                                                <td> @string.Format("{0:n0}", item.OPDProrata) </td>
+                                                <td> @string.Format("{0:n0}",ViewBag.revSumOPD) </td>
+                                                <td> @string.Format("{0:n0}",ViewBag.revSumOPDMTD) </td>
+                                                <td> @string.Format("{0:n0}", ViewBag.OPDRunRate) </td>
+                                                <td> @string.Format("{0:n0}", ViewBag.OPDRunrateBasis) </td>
+                                                <td> @string.Format("{0:n0}", ViewBag.OPDToAchievebufdgetRunRate) </td>
+
+                                            </tr>
+                                        }
+                                                }
+                                </tbody>
+
+                            </table>
+                        </div>
+
+                    </div>
+
+
+
+            </div>
+
+        <div class="row">
+
+                <div class="col-lg-12">
+                    <h4 class="m-t-0 header-title" style="text-align:center"><b>Actual For The Day(@String.Format("{0:D}", datelabel))</b></h4>
+
+
+                    <div class="p-20">
+                        <table class="table table-bordered m-0">
+
+                            <thead >
+                                <tr>
+                                    <th scope = "col" colspan="3" style="text-align:center">DAYS REVENUE</th>
+                                    <th scope = "col" colspan= "3" style= "text-align:justify">REVENUE MTD</th>
+                                   
+                                  </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    @*<th>Total</th>
+                                    <th>@ViewBag.payorLMCountIPD </th>
+                                    <th>@ViewBag.revLMSumIPD </th>*@
+                                </tr>
+                            </tfoot>
+
+                            <tbody>
+                                @{
+                                    //To make unique Id
+                                    <tr>
+                                        <th>BUDGET</th>
+                                        <th>ACTUAL</th>
+                                        <th>% Achievement</th>
+                                        <th>BUDGET</th>
+                                        <th>ACTUAL</th>
+                                        <th>% Achievement</th>
+                                    </tr>
+                                    foreach (var item in Model.BudgetAnalysis)
+                                    {
+                                        <tr>
+                                            <td>@string.Format("{0:n0}",ViewBag.DayBudget)</td>
+                                            <td>@string.Format("{0:n0}",ViewBag.IPOPActualDay)</td>
+                                            <td>@string.Format("{0:n0}",ViewBag.DailyPerAchievement)</td>
+
+                                            <td>@string.Format("{0:n0}",ViewBag.IPOPProRata) </td>
+                                            <td>@string.Format("{0:n0}",ViewBag.IPOPActualMTD)</td>
+                                           
+                                            <td>@string.Format("{0:n0}",ViewBag.PerACHIEVEMENT)</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+
+        </div>
+
+       
+
+    </div>
+</div>
+

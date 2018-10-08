@@ -1,0 +1,535 @@
+﻿
+@model CEO_Dashboard.Models.BudgetModels.MasterMTDDetails
+@{
+    ViewBag.Title = "AdmissionReports";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+    DateTime date = DateTime.Now;
+    var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
+    var firstDateOfLastMonth = new DateTime(date.Year, date.AddMonths(-1).Month, 1);
+    var dateval = DateTime.Parse(Model.EndTime).ToString("yyyy-MM-dddd");
+    var datelabel = DateTime.Parse(Model.EndTime);
+    var qs = HttpUtility.ParseQueryString("");
+    //Model.FacilityIds.ToList().ForEach(s => qs.Add("Facilitys", s.ToString()));
+}
+
+@if (ViewBag.Error != null)
+{
+    <h6><label style="color:red">@ViewBag.Error</label></h6>
+}
+
+
+<div class="col-sm-12">
+
+
+
+    @using (Html.BeginForm("AdmissionReports", "BudgetVsRevenue", FormMethod.Post, new { @class = "card-box" , autocomplete = "off" }))
+    {
+
+        <div class="form-group">
+
+            <div class="col-sm-4">
+                @Html.LabelFor(m => m.FacilityIds, new { @class = "col-sm-12" })
+                @Html.ListBoxFor(m => m.FacilityIds, Model.Facility, new { @class = "listbox form-control input-sm col-sm-3" })
+            </div>
+            @*<div class="col-sm-3">
+                    @Html.LabelFor(m => m.StartTime, new { @class = "col-sm-3" })
+                    @Html.TextBoxFor(m => m.StartTime, new { @class = "datepicker form-control input-sm col-sm-3", @id = "start" })
+
+                </div>*@
+            <div class="col-sm-3">
+                @Html.LabelFor(m => m.EndTime, new { @class = "col-sm-3" })
+                @Html.TextBoxFor(m => m.EndTime, new { @class = "datepicker-autoclose  form-control input-sm col-sm-3", @id = "end" })
+                @*<span class="input-group-addon bg-custom b-0 text-white"><i class="icon-calender"></i></span>*@
+            </div>
+
+            <br />
+
+            <button type="submit" class="btn btn-default waves-effect waves-light btn-sm">
+                Filter
+            </button>
+
+        </div>
+    }
+</div>
+<div class="col-sm-12">
+    <div class="card-box">
+        <fieldset>
+            <legend>Admission Reports</legend>
+        </fieldset>
+            <div class="panel-group" id="accordion-test-2">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion-test-1" href="#collapseOne-1" aria-expanded="false" class="collapsed">
+                                Daily Admisssion Report
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseOne-1" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div class="card-box">
+                                <div class="row">
+
+                                    <div class="col-lg-12">
+                                        <div class="p-20">
+                                            <table class="table table-striped m-0">
+
+                                                <thead>
+                                                    <tr>
+                                                        <th>Specialty</th>
+                                                        <th>Number of Admission</th>
+                                                        <th>Private</th>
+                                                        <th>Client</th>
+                                                        <th>HMO </th>
+                                                        <th>NHIS</th>
+                                                        <th>Staff </th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th>Total</th>
+                                                        <th>@ViewBag.PtNum </th>
+                                                        <th>@ViewBag.Private</th>
+                                                        <th>@ViewBag.Client</th>
+                                                        <th>@ViewBag.HMO</th>
+                                                        <th>@ViewBag.NHIS </th>
+                                                        <th>@ViewBag.Staff </th>
+
+                                                    </tr>
+                                                </tfoot>
+
+                                                <tbody>
+                                                    @{
+                                                        //To make unique Id
+
+                                                        foreach (var item in Model.AdmissionReportAnalysis)
+                                                        {
+                                                           
+                                                            <tr>
+                                                               
+                                                                <td><a href="#custom-modal" Id="openup" @*class="btn btn-primary waves-effect waves-light"*@ class="class1" data-toggle="modal" data-target=".bs-example-modal-lg" data-Id="@item.identityId">@item.Specialty</a></td>
+                                                                @*<button class="btn btn-primary waves-effect waves-light" data-toggle="modal" data-target=".bs-example-modal-lg">Large modal</button>*@
+                                                                @*<td><a href="@Url.Action("AdmmisionDetails", "BudgetVsRevenue", new {Id=item.identityId, endDate = Model.EndTime, Facilitys= Json.Encode(Model.FacilityIds) })" class="btn btn-primary waves-effect waves-light" data-animation="sign" data-plugin="" data-overlaySpeed="100" data-overlayColor="#36404a Id="openup" data-Id="@item.identityId">@item.Specialty</a></td>*@
+                                                                @*<td scope="row">@Html.ActionLink(item.Specialty, "AdmissionDetails", new { DoctId = item.Id, startDate =Model.EndTime.ToString(), FacilityId = Model.FacilityIds }, new { @class = "btn btn-primary waves-effect waves-light",@data-animation = "sign", @data-plugin = "custommodal", @data-overlaySpeed = "100", @data overlayColor = "#36404a"})</td>*@
+                                                                @*<td>@item.identityId</td>*@
+                                                                <td>@item.PtNum</td>
+                                                                <td>@item.Private</td>
+                                                                <td>@item.Client</td>
+                                                                <td>@item.HMO</td>
+                                                                <td>@item.NHIS</td>
+                                                                <td>@item.Staff</td>
+
+                                                            </tr>
+                                                    
+                                                        }
+                                                    }
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion-test-2" href="#collapseOne-2" aria-expanded="false" class="collapsed">
+                                MTD Admisssion Report
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseOne-2" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div class="card-box">
+                                <div class="row">
+
+                                    <div class="col-lg-12">
+                                        <div class="p-20">
+                                            <table class="table table-striped m-0">
+
+                                                <thead>
+                                                    <tr>
+                                                        <th>Specialty</th>
+                                                        <th>Number of Admission</th>
+                                                        <th>Private</th>
+                                                        <th>Client</th>
+                                                        <th>HMO </th>
+                                                        <th>NHIS</th>
+                                                        <th>Staff </th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th>Total</th>
+                                                        <th>@ViewBag.PtNumMTD </th>
+                                                        <th>@ViewBag.PrivateMTD</th>
+                                                        <th>@ViewBag.ClientMTD</th>
+                                                        <th>@ViewBag.HMOMTD</th>
+                                                        <th>@ViewBag.NHISMTD </th>
+                                                        <th>@ViewBag.StaffMTD </th>
+
+                                                    </tr>
+                                                </tfoot>
+
+                                                <tbody>
+                                                    @{
+                                                        //To make unique Id
+
+                                                        foreach (var item in Model.AdmissionReportAnalysisMTD)
+                                                        {
+
+                                                            <tr>
+                                                                <td><a href="#custom-modal" Id="openupMTD" class="class2" data-toggle="modal" data-target=".bs-example-modal-lg" data-Id="@item.identityId">@item.Specialty</a></td>
+                                                                @*<td scope="row">@item.Specialty</td>*@
+                                                                <td>@item.PtNum</td>
+                                                                <td>@item.Private</td>
+                                                                <td>@item.Client</td>
+                                                                <td>@item.HMO</td>
+                                                                <td>@item.NHIS</td>
+                                                                <td>@item.Staff</td>
+
+                                                            </tr>
+
+                                                        }
+                                                    }
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+             </div>
+    </div>
+</div>
+
+<div class="col-sm-12">
+    <div class="card-box">
+        <fieldset>
+
+            <legend>Payor Wise Admission Report</legend>
+            <div class="row">
+
+                <fieldset>
+
+                    <legend style="font-size:medium;text-align:center"> Date  (@String.Format("{0:D}", @datelabel)) </legend>
+                    <div class="col-sm-12">
+
+
+
+                        <div class="p-20">
+                            <table class="table table-striped m-0">
+
+                                <thead>
+                                    <tr>
+                                        <th>Payor</th>
+                                        <th>FTD Admission</th>
+                                        <th>MTD Admission</th>
+                                        
+
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>Total</th>
+                                        <th>@ViewBag.Daycounterr </th>
+                                        <th>@ViewBag.MtdSum</th>
+                                       
+                                    </tr>
+                                </tfoot>
+
+                                <tbody>
+                                    @{
+                                
+                                        foreach (var item in Model.PayorWiseReportAnalysis)
+                                        {
+
+                                            <tr>
+                                                <td scope="row">@item.Payor</td>
+                                                <td>@item.Daycounterr</td>
+                                                <td>@item.MTDcounterj</td>
+                                            </tr>
+                                           
+                                        }
+                                    }
+                                </tbody>
+
+                            </table>
+                        </div>
+
+                    </div>
+                  
+
+
+
+
+                </fieldset>
+            </div>
+        </fieldset>
+    </div>
+</div>
+<div class="col-sm-12">
+    <div class="card-box">
+        <fieldset>
+
+            <legend>Procedures Report</legend>
+            <div class="row">
+
+                <fieldset>
+
+                    <legend style="font-size:medium;text-align:center"> Date  (@String.Format("{0:D}", @datelabel)) </legend>
+            
+                    <div class="col-sm-6">
+
+
+
+                        <div class="p-20">
+                            <table class="table table-striped m-0">
+
+                                <thead>
+                                    <tr>
+                                        <th>Procedure</th>
+                                        <th>FTD Procedure</th>
+                                        <th>MTD Procedure</th>
+
+
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>Total</th>
+                                        <th>@ViewBag.todaysProce </th>
+                                        <th>@ViewBag.MTDProce</th>
+
+                                    </tr>
+                                </tfoot>
+
+                                <tbody>
+                                    @{
+
+                                        foreach (var item in Model.ProceduresReportAnalysis)
+                                        {
+
+                                            <tr>
+                                                <td scope="row">@item.Procedures</td>
+                                                <td>@item.TodaysProc</td>
+                                                <td>@item.MTDProc</td>
+                                            </tr>
+
+                                        }
+                                    }
+                                </tbody>
+
+                            </table>
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-sm-6">
+
+
+
+                        <div class="p-20">
+                            <table class="table table-striped m-0">
+
+                                <thead>
+                                    <tr>
+                                        <th>Procedure Cat.</th>
+                                        <th>FTD Procedure</th>
+                                        <th>MTD Procedure</th>
+
+
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>Total</th>
+                                        <th>@ViewBag.todaysProceCAT </th>
+                                        <th>@ViewBag.MTDProceCAT</th>
+
+                                    </tr>
+                                </tfoot>
+
+                                <tbody>
+                                    @{
+
+                                        foreach (var item in Model.ProceduresReportAnalysisCAT)
+                                        {
+
+                                            <tr>
+                                                <td scope="row">@item.Procedures</td>
+                                                <td>@item.TodaysProc</td>
+                                                <td>@item.MTDProc</td>
+                                            </tr>
+
+                                        }
+                                    }
+                                </tbody>
+
+                            </table>
+                        </div>
+
+                    </div>
+
+
+                </fieldset>
+            </div>
+        </fieldset>
+    </div>
+</div>
+
+
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myLargeModalLabel">Admission Details</h4>
+            </div>
+            <div class="modal-body">
+                <div id="table">
+                    <table class="table table-striped m-0">
+                        <thead>
+                            <tr>
+                                <th>Hospital Number</th>
+                                <th>Admission Date</th>
+                                <th>Discharge Date</th>
+                            </tr>
+                             
+                        </thead>
+                        <tbody id="tbl">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- Modal -->
+
+
+
+
+<script type="text/javascript">
+
+
+    $(function () {
+        $(".class1").click(function () {
+            $('#tbl').empty();
+            jQuery.ajaxSettings.traditional = true
+            var $buttonClicked = $(this);
+            var id = $buttonClicked.attr('data-id');
+            var d= new Date('@Model.EndTime.ToString()')
+            var facilitys=@Json.Encode(Model.FacilityIds).ToString();
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("AdmmisionDetails", "BudgetVsRevenue")",
+                //new { Id = item.identityId, endDate = Model.EndTime, Facilitys = Json.Encode(Model.FacilityIds) }",
+                contentType: "application/json; charset=utf-8",
+            data: {Id:id,endDate:d,Facilitys:facilitys},
+            success: function (response) {
+                //var result=JSON.parse(response);
+                $.each(response, function(key, value) {
+                    //console.log(this, value, response[key]);
+                    var admitdate = new Date(parseInt(value.AdmissionDate.replace(/(^.*\()|([+-].*$)/g, '')));
+                    admitdate.setMonth(admitdate.getMonth() + 1);
+                    var admitdateString = admitdate.getDate() + "/" + admitdate.getMonth() + "/" + admitdate.getFullYear();
+
+                    var disdate = new Date(parseInt(value.DischargeDate.replace(/(^.*\()|([+-].*$)/g, '')));
+                    disdate.setMonth(admitdate.getMonth());
+                    var disdateString = disdate.getDate() + "/" + disdate.getMonth() + "/" + disdate.getFullYear();
+                    $('#tbl').append("<tr><td>"+value.RegistrationNo+"</td><td>"+admitdateString+"</td><td>"+disdateString+"</td></tr>");
+                });
+            },
+
+            //    if (response) {
+            //        var len = response.length;
+            //        if (len > 0) {
+            //            for (var i = 0; i < len; i++) {
+            //                $('#tbl').append("<tr><td>"+response.d.RegistrationNo+"</td><td>"+response.d.RegistrationNo+"</td><td>"+response.d.RegistrationNo+"</td></tr>");
+            //            }
+            //        }
+            //    }
+            //    $('#custom-modal').modal('show');
+            //},
+            error: function (response) {
+                alert(response);
+            }
+        });
+        });
+
+
+        $(".class2").click(function () {
+            $('#tbl').empty();
+            jQuery.ajaxSettings.traditional = true
+            var $buttonClicked = $(this);
+            var id = $buttonClicked.attr('data-id');
+            var d= new Date('@Model.EndTime.ToString()');
+            //alert(d);
+
+           @*var d= new Date(@DateTime.Parse(Model.EndTime).Year,@DateTime.Parse(Model.EndTime).Month,@DateTime.Parse(Model.EndTime).Day);*@
+           //alert(d);
+           var facilitys=@Json.Encode(Model.FacilityIds).ToString();
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("AdmmisionDetailsMTD", "BudgetVsRevenue")",
+                //new { Id = item.identityId, endDate = Model.EndTime, Facilitys = Json.Encode(Model.FacilityIds) }",
+                contentType: "application/json; charset=utf-8",
+            data: {Id:id,endDate:d,Facilitys:facilitys},
+            success: function (response) {
+                //var result=JSON.parse(response);
+                $.each(response, function(key, value) {
+                    //console.log(this, value, response[key]);
+                    var admitdate = new Date(parseInt(value.AdmissionDate.replace(/(^.*\()|([+-].*$)/g, '')));
+                    admitdate.setMonth(admitdate.getMonth()+1);
+                    var admitdateString = admitdate.getDate() + "/" + admitdate.getMonth() + "/" + admitdate.getFullYear();
+
+                    var disdate = new Date(parseInt(value.DischargeDate.replace(/(^.*\()|([+-].*$)/g, '')));
+                    disdate.setMonth(admitdate.getMonth());
+                    var disdateString = disdate.getDate() + "/" + disdate.getMonth() + "/" + disdate.getFullYear();
+                    $('#tbl').append("<tr><td>"+value.RegistrationNo+"</td><td>"+admitdateString+"</td><td>"+disdateString+"</td></tr>");
+                });
+            },
+
+            //    if (response) {
+            //        var len = response.length;
+            //        if (len > 0) {
+            //            for (var i = 0; i < len; i++) {
+            //                $('#tbl').append("<tr><td>"+response.d.RegistrationNo+"</td><td>"+response.d.RegistrationNo+"</td><td>"+response.d.RegistrationNo+"</td></tr>");
+            //            }
+            //        }
+            //    }
+            //    $('#custom-modal').modal('show');
+            //},
+            error: function (response) {
+                alert(response);
+            }
+        });
+    });
+
+
+
+
+    });
+
+
+
+</script>

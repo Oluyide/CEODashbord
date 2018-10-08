@@ -1,0 +1,154 @@
+﻿@model CEO_Dashboard.Models.PayorMixTablesModels.MasterDetails
+@{
+    ViewBag.Title = "SpecialtyReport";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+    WebGrid grid = new WebGrid(source: Model.NestedValues, canSort: true, canPage: false);
+
+}
+
+<style>
+    /*Here I will write some css for looks good*/
+
+    th, td {
+        padding: 5px;
+    }
+
+    th {
+        background-color: lightblue;
+    }
+
+    #MainGrid, #MainGrid tr {
+        border: 1px solid #0D857B;
+    }
+
+    #SubGrid, #SubGrid tr {
+        border: 1px solid green;
+    }
+
+    #SubGrid {
+        margin: 0px 0px 0px 10px;
+        padding: 5px;
+        width: 95%;
+    }
+
+        #SubGrid th {
+            font-size: 12px;
+        }
+
+    .hoverEff {
+        cursor: pointer;
+    }
+
+        .hoverEff:hover {
+            background-color: rgb(248, 242, 242);
+        }
+
+    .expand {
+        background-image: url(../Images/plus.png);
+        background-position-x: -22px;
+        background-repeat: no-repeat;
+    }
+
+    .collapse1 {
+        background-image: url(../Images/plus.png);
+        background-position-x: -2px;
+        background-repeat: no-repeat;
+    }
+</style>
+
+<div class="col-sm-12">
+
+
+
+    @using (Html.BeginForm("SpecialtyDataMajor", "DoctorsRevenue", FormMethod.Post, new { @class = "card-box" , autocomplete = "off" }))
+    {
+        <div class="form-group">
+
+            <div class="col-sm-4">
+                @Html.LabelFor(m => m.FacilityIds, new { @class = "col-sm-12" })
+                @Html.ListBoxFor(m => m.FacilityIds, Model.Facility, new { @class = "listbox form-control input-sm col-sm-3" })
+            </div>
+
+            <div class="col-sm-3">
+                @Html.LabelFor(m => m.StartTime, new { @class = "col-sm-3" })
+                @Html.TextBoxFor(m => m.StartTime, new { @class = "datepicker-autoclose form-control input-sm col-sm-3", @id = "start" })
+                @*<span class="input-group-addon bg-custom b-0 text-white"><i class="icon-calender"></i></span>*@
+            </div>
+
+            <div class="col-sm-3">
+                @Html.LabelFor(m => m.EndTime, new { @class = "col-sm-3" })
+                @Html.TextBoxFor(m => m.EndTime, new { @class = "datepicker-autoclose form-control input-sm col-sm-3", @id = "end" })
+                @*<span class="input-group-addon bg-custom b-0 text-white"><i class="icon-calender"></i></span>*@
+            </div>
+
+            <br />
+
+            <button type="submit" class="btn btn-default waves-effect waves-light btn-sm">
+                Filter
+            </button>
+
+        </div>
+    }
+</div>
+
+
+<div id="main" style="padding:25px; background-color:white;">
+    @grid.GetHtml(
+                htmlAttributes: new { id = "MainGrid", width = "700px" },
+                  tableStyle: "table table-bordered table-responsive",
+                columns: grid.Columns(
+                        grid.Column("SpelcialtyValues.DoctorDepartment", "Specialty"),
+                        grid.Column("SpelcialtyValues.OPNetAmt", "OPD"),
+                        grid.Column("SpelcialtyValues.IPNetAmt", "IPD"),
+                        grid.Column("SpelcialtyValues.TotalNetAmt", "TotalNet"),
+
+                        grid.Column(format: (item) =>
+                        {
+                            WebGrid subGrid = new WebGrid(source: item.DoctorsDetails, canPage: false);
+                            return subGrid.GetHtml(
+                                htmlAttributes: new { id = "SubGrid" },
+                                columns: subGrid.Columns(
+                                        subGrid.Column("ProvidingDoctor", "DoctorName"),
+                                        subGrid.Column("OPNetAmt", "OPD"),
+                                        subGrid.Column("IPNetAmt", "IPD"),
+                                        subGrid.Column("TotalNetAmt", "TotalNet")
+                                    )
+                                );
+                        })
+                    )
+                )
+</div>
+
+<script>
+        $(document).ready(function () {
+            var size = $("#main #MainGrid > thead > tr >th").size(); // get total column
+            $("#main #MainGrid > thead > tr >th").last().remove(); // remove last column
+            $("#main #MainGrid > thead > tr").prepend("<th></th>"); // add one column at first for collapsible column
+            $("#main #MainGrid > tbody > tr").each(function (i, el) {
+                $(this).prepend(
+                        $("<td></td>")
+                        .addClass("expand")
+                        .addClass("hoverEff")
+                        .attr('title', "click for show/hide")
+                    );
+
+                //Now get sub table from last column and add this to the next new added row
+                var table = $("table", this).parent().html();
+                //add new row with this subtable
+                $(this).after("<tr><td></td><td style='padding:5px; margin:0px;' colspan='" + (size - 1) + "'>" + table + "</td></tr>");
+                $("table", this).parent().remove();
+                // ADD CLICK EVENT FOR MAKE COLLAPSIBLE
+                $(".hoverEff", this).on("click", function () {
+                    $(this).parent().closest("tr").next().slideToggle(100);
+                    $(this).toggleClass("expand collapse1");
+                });
+            });
+
+            //by default make all subgrid in collapse mode
+            $("#main #MainGrid > tbody > tr td.expand").each(function (i, el) {
+                $(this).toggleClass("expand collapse1");
+                $(this).parent().closest("tr").next().slideToggle(100);
+            });
+
+        });
+</script>

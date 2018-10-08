@@ -1,0 +1,343 @@
+﻿@model CEO_Dashboard.Models.BudgetModels.MasterMTDDetails
+@{
+    ViewBag.Title = "OccupancyReports";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+  
+    var datelabel = DateTime.Parse(Model.EndTime);
+
+}
+<h2>Occupancy Reports</h2>
+<div class="col-sm-12">
+
+  
+    @using (Html.BeginForm("OccupancyReports", "BudgetVsRevenue", FormMethod.Post, new { @class = "card-box", autocomplete = "off" }))
+    {
+
+        <div class="form-group">
+
+            <div class="col-sm-3">
+                @Html.LabelFor(m => m.StartTime, new { @class = "col-sm-3" })
+                @Html.TextBoxFor(m => m.StartTime, new { @class = "datepicker-autoclose  form-control input-sm col-sm-3", @id = "start" })
+                @*<span class="input-group-addon bg-custom b-0 text-white"><i class="icon-calender"></i></span>*@
+            </div>
+            <div class="col-sm-3">
+                @Html.LabelFor(m => m.EndTime, new { @class = "col-sm-3" })
+                @Html.TextBoxFor(m => m.EndTime, new { @class = "datepicker-autoclose  form-control input-sm col-sm-3", @id = "end" })
+                @*<span class="input-group-addon bg-custom b-0 text-white"><i class="icon-calender"></i></span>*@
+            </div>
+
+            <br />
+
+            <button type="submit" class="btn btn-default waves-effect waves-light btn-sm">
+                Filter
+            </button>
+         
+        </div>
+
+    }
+    <h4 style="text-align:center"><span>Mid Night(@String.Format("{0:D}", datelabel))</span></h4>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        @*@Html.ActionLink("Download Report", "OccupancyReportExcel", "Reports")*@
+        <div class="panel-group" id="accordion-test-2">
+            
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion-test-2" href="#collapseOne-2" aria-expanded="false" class="collapsed">
+                           APAPA DAILY OCCUPANCY
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseOne-2" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="card-box">
+                            <div class="row">
+
+                                <div class="col-lg-12">
+                                    <div class="p-20">
+                                        <table class="table table-bordered m-0">
+
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" colspan="4" style="text-align:center">Apapa Daily Occupancy Report</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Total</th>
+                                                    <th>@ViewBag.apT</th>
+                                                    <th>@ViewBag.apO</th>
+                                                    <th>@ViewBag.apP</th>
+                                                   
+                                                </tr>
+                                            </tfoot>
+
+                                            <tbody>
+                                                @{
+//To make unique Id
+                                                    <tr>
+                                                        <th>Bed Category</th>
+                                                        <th>Total Number</th>
+                                                        <th>Occupied</th>
+                                                        <th>% Occupancy</th>
+
+
+                                                    </tr>
+                                                    foreach (var item in Model.AppaOccupancyAnalysis)
+                                                    {
+
+                                                        <tr>
+                                                            <td>@item.BedcategoryName</td>
+                                                            <td>@item.TotalBed</td>
+                                                            <td>@item.OccupiedBed</td>
+                                                            <td>@item.Percentage</td>
+                                                            
+
+                                                        </tr>
+
+                                                    }
+                                                }
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion-test-2" href="#collapseTwo-2" class="collapsed" aria-expanded="false">
+                            Ikeja Daily Occupancy
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseTwo-2" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div class="card-box">
+                            <div class="row">
+
+                                <div class="col-lg-12">
+                                   
+
+
+                                    <div class="p-20">
+                                        <table class="table table-bordered m-0">
+
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" colspan="4" style="text-align:center">Ikeja Daily Occupancy Report</th>
+                                                   
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Total</th>
+                                                    <th>@ViewBag.ikT</th>
+                                                    <th>@ViewBag.ikO</th>
+                                                    <th>@ViewBag.ikP</th>
+
+                                                </tr>
+                                            </tfoot>
+
+                                            <tbody>
+                                                @{
+                                                    //To make unique Id
+                                                    <tr>
+                                                        <th>Bed Category</th>
+                                                        <th>Total Number</th>
+                                                        <th>Occupied</th>
+                                                        <th>% Occuppancy</th>
+
+
+                                                    </tr>
+                                                    foreach (var item in Model.IkejaOccupancyAnalysis)
+                                                    {
+
+                                                        <tr>
+                                                            <td>@item.BedcategoryName</td>
+                                                            <td>@item.TotalBed</td>
+                                                            <td>@item.OccupiedBed</td>
+                                                            <td>@item.Percentage</td>
+                                                            
+
+                                                        </tr>
+
+                                                    }
+                                                }
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion-test-2" href="#collapseThree-2" class="collapsed" aria-expanded="false">
+                            Idejo Daily Occupancy
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseThree-2" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="card-box">
+                            <div class="row">
+
+                                <div class="col-lg-12">
+                                  
+
+
+                                    <div class="p-20">
+                                        <table class="table table-bordered m-0">
+
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" colspan="4" style="text-align:center">Idejo Daily Occupancy Report</th>
+                                                
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Total</th>
+                                                    <th>@ViewBag.idT</th>
+                                                    <th>@ViewBag.idO</th>
+                                                    <th>@ViewBag.idP</th>
+
+                                                </tr>
+                                            </tfoot>
+
+                                            <tbody>
+                                                @{
+                                                    //To make unique Id
+                                                    <tr>
+                                                        <th>Bed Category</th>
+                                                        <th>Total Number</th>
+                                                        <th>Occupied</th>
+                                                        <th>% Occupancy</th>
+
+
+                                                    </tr>
+                                                    foreach (var item in Model.IdejoOccupancyAnalysis)
+                                                    {
+
+                                                        <tr>
+                                                            <td>@item.BedcategoryName</td>
+                                                            <td>@item.TotalBed</td>
+                                                            <td>@item.OccupiedBed</td>
+                                                            <td>@item.Percentage</td>
+                                                            
+
+                                                        </tr>
+
+                                                    }
+                                                }
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion-test" href="#collapseOne" class="collapsed">
+                            Ikoyi Daily Occupancy
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="card-box">
+                            <div class="row">
+
+                                <div class="col-lg-12">
+
+
+
+                                    <div class="p-20">
+                                        <table class="table table-bordered m-0">
+
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" colspan="4" style="text-align:center">IKOYI Daily Occupancy Report</th>
+                                                    @*<th scope="col" colspan="4" style="text-align:center">IKEJA</th>
+                                                <th scope="col" colspan="4" style="text-align:center">IDEJO</th>
+                                                <th scope="col" colspan="4" style="text-align:center">IKOYI</th>*@
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Total</th>
+                                                    <th>@ViewBag.ikyT</th>
+                                                    <th>@ViewBag.ikyO</th>
+                                                    <th>@ViewBag.ikyP</th>
+
+                                                </tr>
+                                            </tfoot>
+
+                                            <tbody>
+                                                @{
+                                                    //To make unique Id
+                                                    <tr>
+                                                        <th>Bed Category</th>
+                                                        <th>Total Number</th>
+                                                        <th>Occupied</th>
+                                                        <th>% Occupancy</th>
+
+
+                                                    </tr>
+                                                    foreach (var item in Model.IkoyiOccupancyAnalysis)
+                                                    {
+
+                                                        <tr>
+                                                            <td>@item.BedcategoryName</td>
+                                                            <td>@item.TotalBed</td>
+                                                            <td>@item.OccupiedBed</td>
+                                                            <td>@item.Percentage</td>
+                                                            
+
+                                                        </tr>
+
+                                                    }
+                                                }
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+</div>

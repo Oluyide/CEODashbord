@@ -1,0 +1,251 @@
+﻿
+
+@model CEO_Dashboard.Models.PayorMixMTDModel.MasterMTDDetails
+@{
+    ViewBag.Title = "SpecializationPayorMixMTDReport";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+    DateTime date = DateTime.Now;
+    var datelabel = DateTime.Parse(Model.EndTime);
+    var firstDayOfMonth = new DateTime(datelabel.Year, datelabel.Month, 1);
+    var firstDateOfLastMonth = new DateTime(datelabel.Year, datelabel.AddMonths(-1).Month, 1);
+
+}
+@if (ViewBag.Error != null)
+ {
+<h6><label style="color:red">@ViewBag.Error</label></h6>
+}
+<div class="col-sm-12">
+        
+
+    @using (Html.BeginForm("SpecializationPayorMixMTDReport", "Reports", FormMethod.Post, new { @class = "card-box", autocomplete = "off" }))
+    {
+
+        <div class="form-group">
+
+            <div class="col-sm-4">
+                @Html.LabelFor(m => m.FacilityIds, new { @class = "col-sm-12" })
+                @Html.ListBoxFor(m => m.FacilityIds, Model.Facility, new { @class = "listbox form-control input-sm col-sm-3" })
+            </div>
+            @*<div class="col-sm-3">
+                @Html.LabelFor(m => m.StartTime, new { @class = "col-sm-3" })
+                @Html.TextBoxFor(m => m.StartTime, new { @class = "datepicker form-control input-sm col-sm-3", @id = "start" })
+               
+            </div>*@
+            <div class="col-sm-3">
+                @Html.LabelFor(m => m.EndTime, new { @class = "col-sm-3" })
+                @Html.TextBoxFor(m => m.EndTime, new { @class = "datepicker-autoclose form-control input-sm col-sm-3", @id = "end" })
+                @*<span class="input-group-addon bg-custom b-0 text-white"><i class="icon-calender"></i></span>*@
+            </div>
+
+            <br />
+
+            <button type="submit" class="btn btn-default waves-effect waves-light btn-sm">
+                Filter
+            </button>
+
+        </div>
+    }
+
+    </div>
+
+
+
+    <div class="col-sm-12">
+        <div class="card-box">
+            <fieldset>
+
+                <legend>Specialty MTD Wise Revenue and Volume (Running Income)</legend>
+                <div class="row">
+
+                    <fieldset>
+
+                        <legend style="font-size:medium;text-align:center">Month To Date (@String.Format("{0:D}", @firstDayOfMonth) - @String.Format("{0:D}", @datelabel.AddDays(0)))</legend>
+                        <div class="col-lg-6">
+                            <h4 class="m-t-0 header-title" style="text-align:center"><b>IPD</b></h4>
+
+
+                            <div class="p-20">
+                                <table class="table table-striped m-0">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Specialty</th>
+                                            <th>Pt. Count</th>
+                                            <th>Revenue(M) </th>
+
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Total</th>
+                                            <th>@ViewBag.specialMTDCountIPD</th>
+                                            <th>@ViewBag.specialrevMTDSumIPD </th>
+
+                                        </tr>
+                                    </tfoot>
+
+                                    <tbody>
+                                        @{
+                                            //To make unique Id
+                                            int i = 0;
+                                            foreach (var item in Model.SpecializeMTDReportIPD)
+                                            {
+
+                                                <tr>
+                                                    <td scope="row">@item.SpecializationMTDNameIPD</td>
+                                                    <td>@item.SpecializationMTDCountIPD</td>
+                                                    <td>@item.RevenueMTDIPD</td>
+                                                    @*<td>@item.Revenue</td>*@
+                                                </tr>
+                                                i++;
+                                            }
+                                        }
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-6">
+                            <h4 class="m-t-0 header-title" style="text-align:center"><b>OPD</b></h4>
+                            <div class="p-20">
+                                <table class="table table-striped m-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Specialty</th>
+                                            <th>Pt. Count</th>
+                                            <th>Revenue(M) </th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Total</th>
+                                            <th>@ViewBag.specialMTDCountOPD </th>
+                                            <th>@ViewBag.specialrevMTDSumOPD </th>
+
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        @{
+                                            //To make unique Id
+                                            int j = 0;
+                                            foreach (var item in Model.SpecializeMTDReportOPD)
+                                            {
+
+                                                <tr>
+                                                    <td scope="row">@item.SpecializationMTDNameOPD</td>
+                                                    <td>@item.SpecializationMTDCountOPD</td>
+                                                    <td>@item.RevenueMTDOPD</td>
+                                                    @*<td>@item.Revenue</td>*@
+                                                </tr>
+                                                j++;
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="row">
+
+                    <fieldset>
+                        <legend style="font-size:medium;text-align:center">MTD Previous Month (@String.Format("{0:D}", @firstDateOfLastMonth) - @String.Format("{0:D}", @datelabel.AddDays(0).AddMonths(-1)))</legend>
+                        <div class="col-lg-6">
+                            <h4 class="m-t-0 header-title" style="text-align:center"><b>IPD</b></h4>
+
+
+                            <div class="p-20">
+                                <table class="table table-striped m-0">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Specialty</th>
+                                            <th>Pt. Count</th>
+                                            <th>Revenue(M) </th>
+
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Total</th>
+                                            <th>@ViewBag.specialLMCountIPD </th>
+                                            <th>@ViewBag.specialrevLMSumIPD </th>
+
+                                        </tr>
+                                    </tfoot>
+
+                                    <tbody>
+                                        @{
+                                            //To make unique Id
+                                            int k = 0;
+                                            foreach (var item in Model.SpecializeLMReportIPD)
+                                            {
+
+                                                <tr>
+                                                    <td scope="row">@item.SpecializationLMNameIPD</td>
+                                                    <td>@item.SpecializationLMCountIPD</td>
+                                                    <td>@item.RevenueLMIPD</td>
+                                                    @*<td>@item.Revenue</td>*@
+                                                </tr>
+                                                k++;
+                                            }
+                                        }
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-6">
+                            <h4 class="m-t-0 header-title" style="text-align:center"><b>OPD</b></h4>
+                            <div class="p-20">
+                                <table class="table table-striped m-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Specialty</th>
+                                            <th>Pt. Count</th>
+                                            <th>Revenue(M) </th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Total</th>
+                                            <th>@ViewBag.specialLMCountOPD </th>
+                                            <th>@ViewBag.specialrevLMSumOPD </th>
+
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        @{
+                                            //To make unique Id
+                                            int l = 0;
+                                            foreach (var item in Model.SpecializeLMReportOPD)
+                                            {
+
+                                                <tr>
+                                                    <td scope="row">@item.SpecializationLMNameOPD</td>
+                                                    <td>@item.SpecializationLMCountOPD</td>
+                                                    <td>@item.RevenueLMOPD</td>
+                                                    @*<td>@item.Revenue</td>*@
+                                                </tr>
+                                                l++;
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </fieldset>
+                </div>
+
+            </fieldset>
+        </div>
+    </div>
+    </div>
+
